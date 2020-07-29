@@ -21,6 +21,7 @@ module.exports = function(app) {
       .then(function() {
         res.redirect(307, "/api/login");
       })
+      // By default, if authentication fails, Passport will respond with a 401 Unauthorized status, 
       .catch(function(err) {
         res.status(401).json(err);
       });

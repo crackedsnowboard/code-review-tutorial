@@ -1,13 +1,9 @@
 {
   "development": {
     "username": "root",
-    // match password to local MySQL database
-    "password": null,
-    // database name
+    "password": "password",
     "database": "passport_demo",
-    // IP address of local machine where DB is hosted
     "host": "127.0.0.1",
-    // dialect of SQL database. Could be SQL
     "dialect": "mysql"
   },
   "test": {
