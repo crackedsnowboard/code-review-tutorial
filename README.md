@@ -33,6 +33,7 @@ Looking at the server.js file overall there are a few places we could go next. L
 Inside this folder we have two files index.js and user.js
 
 *index.js*
+<img src="assets/modelindex.png">
 
 Lines 3-5 require moduls file server ("fs"), path (for reading file paths) and establishing sequelize with will perform the function of our ORM and make writing SQL queries much easier. 
 
@@ -42,9 +43,12 @@ Line 8-10 are shortcut varaibles for pointing to starter code for connecting to 
 
 Lines 14-19 Determines which database to use depending on whether we are deployed in the cloud or running a local instance. Denpending on the true/false of the conditional statement the `var sequelize = new Sequelize` will create a model either in the remote database or the local databse using the details form the config.json file. 
 
-Line 22-31 use the file service module, which employes a filter to check that there is a .js file in the directory. For each file, sequelize will create a new model. 
+Line 22-31 this checks our folder to make sure that there isn't a gitignore file and the we aren't looking at the current file and only the files that end with `.js`. 
+
+Line 36 exports our db for other files to use
 
 *user.js*
+<img src="assets/usermodel.png">
 
 This is a sequelize template for a User model. 
 
@@ -68,3 +72,44 @@ Line 31 Returns the user object for other files to use
 Within this folder we have two files api-routes.js and html-routes.js
 
 *api-routes.js*
+
+Lines 2-3 we require our models folder and passport configuration located within the config folder.
+
+Line 5 we export the module as a function that receives the express app as an argument. This is done on the server.js page on line 24
+
+Line 9-11 A post route named `/api/login` is established and uses the local strategy (using email and password) to authenticate on passport. A passport strategy is the method you will use to authenticate a user. Other strategies include Facebook, OAuth, Twitter which use those federated authentication methods. This post method then returns a json object with `req.user`. A list of strategies for passport can be found [Passport-Strategies](http://www.passportjs.org/packages/)
+
+Line 16-28 is another post route named `/api/signup` that uses the sequelize method create to add email and password to the User table. Then the user is redirected to the `/api/login` page on line 22. If authentication fails the user is deliverd a 401 error shown on line 26. 
+
+Line 31-34 is a get route on `/logout` that redirects user to the home page on the `/` route. 
+
+Line 37-50 is a another get route that sends back data about our user to the client side. If the `req.user` is empty then our user is not logged in and an empty object is sent back as indicated on line 40 in the `res.json({});` code. Otherwise the user email and id are returned. 
+
+*html-routes.js*
+
+line 2 is the path module dependency so we can use relatiev routes to our HTML files
+
+line 5 is middleware fo checking if a user is logged in and we will take a look at the file isAuthenticated under the config folder later.
+
+line 9-15 a get route that redirects users who already have an account to the `/members` page. Otherwise, they are directed to the signup html page
+
+line 17-23 get route on the `/login` that redirets user with an account to `/members`. Otherwise sends them to the login.html page.
+
+line 27-31  Here we've add our isAuthenticated middleware to the `/members` route. If a user who is not logged in tries to access this route they will be redirected to the signup page. 
+
+```
+app.get("/members", isAuthenticated, function(req, res) {
+    res.sendFile(path.join(__dirname, "../public/members.html"));
+  });
+```
+## Config folder
+<img src="assets/configfolder.png">
+
+
+
+
+
+
+
+
+
